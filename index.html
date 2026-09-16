@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE PLAYBACK CHIP — CWI Data Dept</title>
+<meta name="description" content="The audit loop on the CWI-1 Scoreboard Chip. Feed it your output about the CWI catalog; get back a scored, annotated playback.">
+<link rel="icon" href="assets/logo.jpg">
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#141824; --panel2:#1a2030; --line:#2a3350;
+    --ink:#eef1f8; --mut:#9aa6c4; --acc:#7fd4ff; --good:#3ddc84; --warn:#ffc24b;
+    --bad:#ff5d5d; --orange:#ff9f43; --flag:#ff7a59;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55}
+  a{color:var(--acc)}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+  header{display:flex;gap:22px;align-items:center;flex-wrap:wrap;
+    border:1px solid var(--line);border-radius:18px;padding:22px;
+    background:linear-gradient(135deg,#101423 0%,#151b2e 60%,#0e1424 100%)}
+  header img.logo{width:96px;height:96px;border-radius:50%;border:2px solid var(--line);object-fit:cover}
+  h1{margin:0;font-size:30px;letter-spacing:.06em}
+  .sub{color:var(--mut);margin:6px 0 0;max-width:60ch}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .badge{font-size:11.5px;font-weight:700;letter-spacing:.08em;padding:5px 11px;border-radius:999px;
+    border:1px solid var(--line);background:#0e1322;color:var(--mut);text-transform:uppercase}
+  .badge.live{color:#0b2b18;background:var(--good);border-color:var(--good)}
+  .badge.sample{color:#3a2200;background:var(--warn);border-color:var(--warn)}
+  .badge.info{color:var(--acc);border-color:var(--acc)}
+  .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0}
+  .how .step{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel)}
+  .how .step b{display:block;margin-bottom:4px;color:var(--acc);font-size:13px;letter-spacing:.06em}
+  .panel{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:22px;margin-top:18px}
+  .panel h2{margin:0 0 6px;font-size:19px;letter-spacing:.04em}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+  label{font-size:13px;color:var(--mut)}
+  textarea{width:100%;min-height:170px;resize:vertical;background:#0b0f1b;color:var(--ink);
+    border:1px solid var(--line);border-radius:12px;padding:14px;font-size:14.5px;line-height:1.6;font-family:inherit}
+  textarea:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+  input[type=text]{background:#0b0f1b;color:var(--ink);border:1px solid var(--line);border-radius:10px;
+    padding:9px 12px;font-size:14px;font-family:inherit}
+  button{cursor:pointer;border:1px solid var(--acc);background:var(--acc);color:#06121f;font-weight:800;
+    padding:11px 20px;border-radius:12px;font-size:14.5px;letter-spacing:.02em}
+  button.ghost{background:transparent;color:var(--acc)}
+  button.warnb{background:transparent;color:var(--warn);border-color:var(--warn)}
+  button:hover{filter:brightness(1.1)}
+  .inputflag{font-size:12px;font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:999px;text-transform:uppercase}
+  .inputflag.user{background:#22304f;color:var(--acc);border:1px solid var(--acc)}
+  .inputflag.sample{background:var(--warn);color:#3a2200}
+  #results{display:none}
+  .scoreband{display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin:8px 0 4px}
+  .score{font-size:64px;font-weight:900;line-height:1}
+  .band{font-size:15px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:8px 18px;border-radius:999px}
+  .band.clean{background:var(--good);color:#0b2b18}
+  .band.notes{background:var(--warn);color:#3a2200}
+  .band.rewrites-needed{background:var(--orange);color:#3a1c00}
+  .band.dont-ship{background:var(--bad);color:#3a0505}
+  .totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:16px 0}
+  .tot{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:center}
+  .tot .n{font-size:26px;font-weight:800}
+  .tot .l{font-size:11px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase}
+  .heard{border-left:4px solid var(--acc);background:#0e1426;padding:14px 18px;border-radius:0 12px 12px 0;margin:14px 0}
+  .heard b{color:var(--acc);letter-spacing:.06em;font-size:12px;text-transform:uppercase;display:block;margin-bottom:4px}
+  .sent{border:1px solid var(--line);border-radius:14px;margin:12px 0;background:var(--panel2);overflow:hidden}
+  .sent .shead{padding:12px 16px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;background:#121828}
+  .sent .snum{font-size:12px;color:var(--mut);font-weight:700}
+  .sent .stext{font-size:15px}
+  .pill{font-size:11px;font-weight:800;letter-spacing:.08em;padding:3px 10px;border-radius:999px;text-transform:uppercase;white-space:nowrap}
+  .pill.VERIFIED{background:#123a24;color:var(--good);border:1px solid var(--good)}
+  .pill.UNVERIFIABLE{background:#3a3320;color:var(--warn);border:1px solid var(--warn)}
+  .pill.DEVIATION{background:#3a2410;color:var(--orange);border:1px solid var(--orange)}
+  .pill.CLAIM-FLAG{background:#3a1a10;color:var(--flag);border:1px solid var(--flag)}
+  .pill.DENIED{background:#3a1010;color:var(--bad);border:1px solid var(--bad)}
+  .claims{padding:6px 16px 14px}
+  .claim{border-top:1px dashed var(--line);padding:10px 0;font-size:13.5px}
+  .claim .meta{color:var(--mut);font-size:12px;margin-top:4px}
+  .claim .meta code{background:#0b0f1b;padding:1px 6px;border-radius:6px;color:var(--acc)}
+  .factset{font-size:13px;color:var(--mut);border:1px dashed var(--line);border-radius:12px;padding:12px 16px;margin-top:16px}
+  footer{margin-top:34px;color:var(--mut);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
+  footer .rule{font-style:italic}
+  .err{background:#3a1010;border:1px solid var(--bad);color:#ffd7d7;border-radius:12px;padding:12px 16px;margin-top:12px;display:none}
+  @media (max-width:640px){ h1{font-size:24px} .score{font-size:48px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img class="logo" src="assets/logo.jpg" alt="Cumulative Web Inc logo">
+    <div style="flex:1;min-width:260px">
+      <h1>THE PLAYBACK CHIP</h1>
+      <p class="sub">The audit loop on the CWI-1 Scoreboard Chip. Paste your own output about the CWI catalog — every detected claim is checked against the verified fact set and returned with a fidelity score, per-sentence verdicts, and the exact line that sank or sailed each claim. Like a tape machine's playback head checking what was just recorded.</p>
+      <div class="badges">
+        <span class="badge info">Data Dept · Gear #26</span>
+        <span class="badge live" id="factBadge">Fact set: LIVE</span>
+        <span class="badge">White-label agent tool</span>
+        <span class="badge">cwi-playback/v1</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="how">
+    <div class="step"><b>1 · Feed</b>Paste text (or JSON with a <code>text</code> field) — anything you were about to publish about the catalog.</div>
+    <div class="step"><b>2 · Detect</b>The chip splits it into sentences and detects claims: numbers, verified names, credit associations, deny-list phrases, anomaly-feed claims repeated as wins.</div>
+    <div class="step"><b>3 · Check</b>Each claim is annotated: VERIFIED with citation + observed date, DEVIATION with the expected value, UNVERIFIABLE when the fact set is silent, CLAIM-FLAG on anomaly-feed repeats, DENIED on deny-list hits.</div>
+    <div class="step"><b>4 · Score</b>Fidelity 0–100, banded <i>clean / notes / rewrites-needed / don't-ship</i> — plus the one-paragraph outside view of how your output reads to someone checking your work.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Input</h2>
+    <div class="row">
+      <span class="inputflag user" id="inputFlag">User input — unchecked until run</span>
+      <span style="flex:1"></span>
+      <label>Checked by <input type="text" id="byField" value="cwi-web" size="18"></label>
+    </div>
+    <textarea id="input" placeholder="Paste the output you want audited — e.g. a draft post, article paragraph, or agent summary about the CWI catalog…"></textarea>
+    <div class="row">
+      <button id="runBtn">▶ Run playback</button>
+      <button class="ghost" id="sampleClean">Load SAMPLE · clean demo</button>
+      <button class="warnb" id="sampleDirty">Load SAMPLE · dirty demo</button>
+      <button class="ghost" id="clearBtn">Clear</button>
+      <button class="ghost" id="dlBtn" style="display:none">⤓ Download report JSON</button>
+    </div>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="panel" id="results">
+    <h2>Playback report</h2>
+    <div class="scoreband">
+      <div class="score" id="score">–</div>
+      <div>
+        <div class="band" id="band">–</div>
+        <div style="color:var(--mut);font-size:13px;margin-top:6px" id="bandMean"></div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="font-size:12.5px;color:var(--mut)" id="repMeta"></div>
+    </div>
+    <div class="totals" id="totals"></div>
+    <div class="heard"><b>Outside view</b><span id="heard"></span></div>
+    <h2 style="margin-top:22px">Sentence-by-sentence</h2>
+    <div id="sentences"></div>
+    <div class="factset" id="factset"></div>
+  </div>
+
+  <footer>
+    <p class="rule">Honesty rule: UNVERIFIABLE is a verdict, not a pass. The chip certifies only what it checked against the fact set — silence about an unchecked claim is the protocol working, not a gap.</p>
+    <p>Fact set: <span class="badge live" style="font-size:10px">LIVE</span> indexed from the CWI-1 Scoreboard Chip, observed 2026-09-15 · Demo inputs are <span class="badge sample" style="font-size:10px">SAMPLE</span> simulated data, never presented as real.<br>
+    Schema: <a href="playback-schema.json">playback-schema.json</a> · Engine: <a href="playback.js">playback.js</a> (JS port of <a href="playback.py">playback.py</a> v1.0.0, parity-tested) · Contact: <a href="mailto:hp@cumulativeweb.com">hp@cumulativeweb.com</a><br>
+    © Cumulative Web Inc — Data Department. White-label: equip it, re-skin it, ship it in your own stack.</p>
+  </footer>
+</div>
+
+<script src="playback.js"></script>
+<script>
+(function(){
+  "use strict";
+  var engine = null, lastReport = null, isSample = false;
+
+  var SAMPLES = {
+    clean: "Zooted Zone has 307,439 lifetime Spotify plays. That Boy Hi Hat is based in Frederick, Maryland. Zooted Zone was produced by Kokurcho.",
+    dirty: "Zooted Zone has 132,000 streams and is streaming fast. King Ahkeem says it was added to No Label Needed. The Audiartist campaign was accepted as a playlist placement."
+  };
+
+  var BAND_MEAN = {
+    "clean": "Ship it. Every checked claim holds.",
+    "notes": "Minor fixes — address the flagged lines, then ship.",
+    "rewrites-needed": "Material problems — rewrite the flagged sentences before anything goes out.",
+    "don't-ship": "Do not publish. The output invents or launders claims."
+  };
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+  function setFlag(sample){
+    isSample = sample;
+    var f = document.getElementById("inputFlag");
+    f.className = "inputflag " + (sample ? "sample" : "user");
+    f.textContent = sample ? "SAMPLE input — simulated demo data" : "User input — unchecked until run";
+  }
+
+  function showErr(msg){
+    var e = document.getElementById("err");
+    e.style.display = "block"; e.textContent = msg;
+  }
+
+  fetch("playback.json").then(function(r){
+    if(!r.ok) throw new Error("could not load playback.json (HTTP " + r.status + ")");
+    return r.json();
+  }).then(function(cfg){
+    engine = PlaybackChip.makeEngine(cfg);
+    var b = document.getElementById("factBadge");
+    b.textContent = "Fact set: LIVE · observed " + cfg.fact_set.observed;
+  }).catch(function(err){ showErr("Engine failed to start: " + err.message); });
+
+  document.getElementById("input").addEventListener("input", function(){ setFlag(false); });
+  document.getElementById("sampleClean").addEventListener("click", function(){
+    document.getElementById("input").value = SAMPLES.clean; setFlag(true);
+  });
+  document.getElementById("sampleDirty").addEventListener("click", function(){
+    document.getElementById("input").value = SAMPLES.dirty; setFlag(true);
+  });
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    document.getElementById("input").value = ""; setFlag(false);
+    document.getElementById("results").style.display = "none";
+    document.getElementById("dlBtn").style.display = "none";
+  });
+
+  function bandClass(b){ return b.replace(/[^a-z]/gi,""); }
+
+  document.getElementById("runBtn").addEventListener("click", function(){
+    if(!engine){ showErr("Engine still loading — try again in a moment."); return; }
+    var raw = document.getElementById("input").value;
+    var text = raw, parsed = null;
+    try { parsed = JSON.parse(raw); } catch(e){}
+    if(parsed && typeof parsed === "object" && typeof parsed.text === "string") text = parsed.text;
+    if(!text.trim()){ showErr("Paste some text first — or load a SAMPLE demo."); return; }
+    document.getElementById("err").style.display = "none";
+    var by = (document.getElementById("byField").value || "cwi-web").trim() || "cwi-web";
+    var rep = engine.buildReport(text, by);
+    lastReport = rep;
+    render(rep);
+  });
+
+  function render(rep){
+    document.getElementById("results").style.display = "block";
+    document.getElementById("score").textContent = rep.fidelity_score;
+    var bandEl = document.getElementById("band");
+    bandEl.textContent = rep.band;
+    bandEl.className = "band " + bandClass(rep.band);
+    document.getElementById("bandMean").textContent = BAND_MEAN[rep.band] || "";
+    document.getElementById("repMeta").innerHTML =
+      "format <b>playback-report/v1</b><br>checked " + esc(rep.checked_at) +
+      " by <b>" + esc(rep.checked_by) + "</b><br>sha256 <code style='font-size:11px'>" +
+      esc(rep.input_sha256.slice(0,16)) + "…</code>";
+
+    var T = rep.totals;
+    var cells = [
+      [T.total_claims,"claims"],[T.verified,"verified"],[T.deviations,"deviations"],
+      [T.unverifiable,"unverifiable"],[T.claim_flags,"claim-flags"],[T.denied,"denied"]
+    ];
+    document.getElementById("totals").innerHTML = cells.map(function(c){
+      return '<div class="tot"><div class="n">'+c[0]+'</div><div class="l">'+c[1]+'</div></div>';
+    }).join("");
+    document.getElementById("heard").textContent = rep.heard_as;
+
+    document.getElementById("sentences").innerHTML = rep.sentences.map(function(s){
+      var claims = s.claims.length ? s.claims.map(function(c){
+        var meta = [];
+        if(c.fact_ref) meta.push("fact <code>"+esc(c.fact_ref)+"</code>");
+        if(c.citation) meta.push(/^https?:/.test(c.citation)
+          ? 'cite <a href="'+esc(c.citation)+'" target="_blank" rel="noopener">link</a>'
+          : "cite <code>"+esc(c.citation)+"</code>");
+        if(c.observed) meta.push("observed "+esc(c.observed));
+        return '<div class="claim"><span class="pill '+esc(c.verdict)+'">'+esc(c.verdict)+
+          '</span> <b>'+esc(c.type)+'</b> · “'+esc(c.value)+'”<br>'+esc(c.note)+
+          (meta.length ? '<div class="meta">'+meta.join(" · ")+"</div>" : "")+'</div>';
+      }).join("") : '<div class="claim" style="color:var(--mut)">No claims detected in this sentence.</div>';
+      return '<div class="sent"><div class="shead"><span class="snum">#'+s.index+
+        '</span><span class="pill '+esc(s.sentence_verdict)+'">'+esc(s.sentence_verdict)+
+        '</span><span class="stext">'+esc(s.text)+'</span></div><div class="claims">'+claims+'</div></div>';
+    }).join("");
+
+    var fs = rep.fact_set;
+    document.getElementById("factset").innerHTML =
+      '<span class="badge live" style="font-size:10px">LIVE</span> Checked against <b>'+esc(fs.chip)+
+      '</b> v'+esc(fs.chip_version)+' · observed '+esc(fs.observed)+
+      ' · <a href="'+esc(fs.citation)+'" target="_blank" rel="noopener">fact-set source</a>';
+
+    document.getElementById("dlBtn").style.display = "";
+    document.getElementById("results").scrollIntoView({behavior:"smooth"});
+  }
+
+  document.getElementById("dlBtn").addEventListener("click", function(){
+    if(!lastReport) return;
+    var blob = new Blob([JSON.stringify(lastReport,null,2)], {type:"application/json"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "playback-report-" + lastReport.fidelity_score + "-" + lastReport.band.replace(/[^a-z]/g,"") + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+})();
+</script>
+</body>
+</html>
