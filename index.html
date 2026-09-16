@@ -92,43 +92,43 @@
     <img class="logo" src="assets/logo.jpg" alt="Cumulative Web Inc logo">
     <div style="flex:1;min-width:260px">
       <h1>THE PLAYBACK CHIP</h1>
-      <p class="sub">The audit loop on the CWI-1 Scoreboard Chip. Paste your own output about the CWI catalog — every detected claim is checked against the verified fact set and returned with a fidelity score, per-sentence verdicts, and the exact line that sank or sailed each claim. Like a tape machine's playback head checking what was just recorded.</p>
+      <p class="sub" data-i18n="chip.sub">The audit loop on the CWI-1 Scoreboard Chip. Paste your own output about the CWI catalog — every detected claim is checked against the verified fact set and returned with a fidelity score, per-sentence verdicts, and the exact line that sank or sailed each claim. Like a tape machine's playback head checking what was just recorded.</p>
       <div class="badges">
-        <span class="badge info">Data Dept · Gear #26</span>
-        <span class="badge live" id="factBadge">Fact set: LIVE</span>
-        <span class="badge">White-label agent tool</span>
+        <span class="badge info" data-i18n="chip.badge_dept">Data Dept · Gear #26</span>
+        <span class="badge live" id="factBadge" data-i18n="chip.fact_live">Fact set: LIVE</span>
+        <span class="badge" data-i18n="chip.badge_white">White-label agent tool</span>
         <span class="badge">cwi-playback/v1</span>
       </div>
     </div>
   </header>
 
   <div class="how">
-    <div class="step"><b>1 · Feed</b>Paste text (or JSON with a <code>text</code> field) — anything you were about to publish about the catalog.</div>
-    <div class="step"><b>2 · Detect</b>The chip splits it into sentences and detects claims: numbers, verified names, credit associations, deny-list phrases, anomaly-feed claims repeated as wins.</div>
-    <div class="step"><b>3 · Check</b>Each claim is annotated: VERIFIED with citation + observed date, DEVIATION with the expected value, UNVERIFIABLE when the fact set is silent, CLAIM-FLAG on anomaly-feed repeats, DENIED on deny-list hits.</div>
-    <div class="step"><b>4 · Score</b>Fidelity 0–100, banded <i>clean / notes / rewrites-needed / don't-ship</i> — plus the one-paragraph outside view of how your output reads to someone checking your work.</div>
+    <div class="step"><b data-i18n="step.feed.t">1 · Feed</b><span data-i18n="step.feed.x1">Paste text (or JSON with a</span> <code>text</code> <span data-i18n="step.feed.x2">field) — anything you were about to publish about the catalog.</span></div>
+    <div class="step"><b data-i18n="step.detect.t">2 · Detect</b><span data-i18n="step.detect.x">The chip splits it into sentences and detects claims: numbers, verified names, credit associations, deny-list phrases, anomaly-feed claims repeated as wins.</span></div>
+    <div class="step"><b data-i18n="step.check.t">3 · Check</b><span data-i18n="step.check.x">Each claim is annotated: VERIFIED with citation + observed date, DEVIATION with the expected value, UNVERIFIABLE when the fact set is silent, CLAIM-FLAG on anomaly-feed repeats, DENIED on deny-list hits.</span></div>
+    <div class="step"><b data-i18n="step.score.t">4 · Score</b><span data-i18n="step.score.x1">Fidelity 0–100, banded</span> <i>clean / notes / rewrites-needed / don't-ship</i> <span data-i18n="step.score.x2">— plus the one-paragraph outside view of how your output reads to someone checking your work.</span></div>
   </div>
 
   <div class="panel">
-    <h2>Input</h2>
+    <h2 data-i18n="panel.input">Input</h2>
     <div class="row">
       <span class="inputflag user" id="inputFlag">User input — unchecked until run</span>
       <span style="flex:1"></span>
-      <label>Checked by <input type="text" id="byField" value="cwi-web" size="18"></label>
+      <label><span data-i18n="input.checked_by">Checked by</span> <input type="text" id="byField" value="cwi-web" size="18"></label>
     </div>
-    <textarea id="input" placeholder="Paste the output you want audited — e.g. a draft post, article paragraph, or agent summary about the CWI catalog…"></textarea>
+    <textarea id="input" data-i18n-ph="input.ph" placeholder="Paste the output you want audited — e.g. a draft post, article paragraph, or agent summary about the CWI catalog…"></textarea>
     <div class="row">
-      <button id="runBtn">▶ Run playback</button>
-      <button class="ghost" id="sampleClean">Load SAMPLE · clean demo</button>
-      <button class="warnb" id="sampleDirty">Load SAMPLE · dirty demo</button>
-      <button class="ghost" id="clearBtn">Clear</button>
-      <button class="ghost" id="dlBtn" style="display:none">⤓ Download report JSON</button>
+      <button id="runBtn" data-i18n="btn.run">▶ Run playback</button>
+      <button class="ghost" id="sampleClean" data-i18n="btn.clean">Load SAMPLE · clean demo</button>
+      <button class="warnb" id="sampleDirty" data-i18n="btn.dirty">Load SAMPLE · dirty demo</button>
+      <button class="ghost" id="clearBtn" data-i18n="btn.clear">Clear</button>
+      <button class="ghost" id="dlBtn" style="display:none" data-i18n="btn.dl">⤓ Download report JSON</button>
     </div>
     <div class="err" id="err"></div>
   </div>
 
   <div class="panel" id="results">
-    <h2>Playback report</h2>
+    <h2 data-i18n="rep.h">Playback report</h2>
     <div class="scoreband">
       <div class="score" id="score">–</div>
       <div>
@@ -139,17 +139,17 @@
       <div style="font-size:12.5px;color:var(--mut)" id="repMeta"></div>
     </div>
     <div class="totals" id="totals"></div>
-    <div class="heard"><b>Outside view</b><span id="heard"></span></div>
-    <h2 style="margin-top:22px">Sentence-by-sentence</h2>
+    <div class="heard"><b data-i18n="rep.outside">Outside view</b><span id="heard"></span></div>
+    <h2 style="margin-top:22px" data-i18n="rep.sentences">Sentence-by-sentence</h2>
     <div id="sentences"></div>
     <div class="factset" id="factset"></div>
   </div>
 
   <footer>
-    <p class="rule">Honesty rule: UNVERIFIABLE is a verdict, not a pass. The chip certifies only what it checked against the fact set — silence about an unchecked claim is the protocol working, not a gap.</p>
-    <p>Fact set: <span class="badge live" style="font-size:10px">LIVE</span> indexed from the CWI-1 Scoreboard Chip, observed 2026-09-15 · Demo inputs are <span class="badge sample" style="font-size:10px">SAMPLE</span> simulated data, never presented as real.<br>
-    Schema: <a href="playback-schema.json">playback-schema.json</a> · Engine: <a href="playback.js">playback.js</a> (JS port of <a href="playback.py">playback.py</a> v1.0.0, parity-tested) · Contact: <a href="mailto:hp@cumulativeweb.com">hp@cumulativeweb.com</a><br>
-    © Cumulative Web Inc — Data Department. White-label: equip it, re-skin it, ship it in your own stack.</p>
+    <p class="rule" data-i18n="foot.rule">Honesty rule: UNVERIFIABLE is a verdict, not a pass. The chip certifies only what it checked against the fact set — silence about an unchecked claim is the protocol working, not a gap.</p>
+    <p><span data-i18n="foot.factset">Fact set:</span> <span class="badge live" style="font-size:10px">LIVE</span> <span data-i18n="foot.factset_mid">indexed from the CWI-1 Scoreboard Chip, observed 2026-09-15 · Demo inputs are</span> <span class="badge sample" style="font-size:10px">SAMPLE</span> <span data-i18n="foot.factset_end">simulated data, never presented as real.</span><br>
+    <span data-i18n="foot.schema">Schema:</span> <a href="playback-schema.json">playback-schema.json</a> · <span data-i18n="foot.engine">Engine:</span> <a href="playback.js">playback.js</a> (JS port of <a href="playback.py">playback.py</a> v1.0.0, parity-tested) · <span data-i18n="foot.contact">Contact:</span> <a href="mailto:hp@cumulativeweb.com">hp@cumulativeweb.com</a><br>
+    <span data-i18n="foot.copy">© Cumulative Web Inc — Data Department.</span> <span data-i18n="foot.white_label">White-label: equip it, re-skin it, ship it in your own stack.</span></p>
   </footer>
 </div>
 
@@ -159,17 +159,24 @@
   "use strict";
   var engine = null, lastReport = null, isSample = false;
 
+  function T(k, fb){
+    try { var v = window.CWI18n && CWI18n.t(k); return (v === null || v === undefined) ? fb : v; }
+    catch(e){ return fb; }
+  }
+
   var SAMPLES = {
     clean: "Zooted Zone has 307,439 lifetime Spotify plays. That Boy Hi Hat is based in Frederick, Maryland. Zooted Zone was produced by Kokurcho.",
     dirty: "Zooted Zone has 132,000 streams and is streaming fast. King Ahkeem says it was added to No Label Needed. The Audiartist campaign was accepted as a playlist placement."
   };
 
-  var BAND_MEAN = {
-    "clean": "Ship it. Every checked claim holds.",
-    "notes": "Minor fixes — address the flagged lines, then ship.",
-    "rewrites-needed": "Material problems — rewrite the flagged sentences before anything goes out.",
-    "don't-ship": "Do not publish. The output invents or launders claims."
-  };
+  function bandMean(){
+    return {
+      "clean": T("band.clean", "Ship it. Every checked claim holds."),
+      "notes": T("band.notes", "Minor fixes \u2014 address the flagged lines, then ship."),
+      "rewrites-needed": T("band.rewrites", "Material problems \u2014 rewrite the flagged sentences before anything goes out."),
+      "don't-ship": T("band.dontship", "Do not publish. The output invents or launders claims.")
+    };
+  }
 
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
@@ -178,7 +185,7 @@
     isSample = sample;
     var f = document.getElementById("inputFlag");
     f.className = "inputflag " + (sample ? "sample" : "user");
-    f.textContent = sample ? "SAMPLE input — simulated demo data" : "User input — unchecked until run";
+    f.textContent = sample ? T("flag.sample", "SAMPLE input \u2014 simulated demo data") : T("flag.user", "User input \u2014 unchecked until run");
   }
 
   function showErr(msg){
@@ -192,8 +199,8 @@
   }).then(function(cfg){
     engine = PlaybackChip.makeEngine(cfg);
     var b = document.getElementById("factBadge");
-    b.textContent = "Fact set: LIVE · observed " + cfg.fact_set.observed;
-  }).catch(function(err){ showErr("Engine failed to start: " + err.message); });
+    b.textContent = T("chip.fact_badge", "Fact set: LIVE \u00b7 observed {date}").replace("{date}", cfg.fact_set.observed);
+  }).catch(function(err){ showErr(T("err.start", "Engine failed to start: ") + err.message); });
 
   document.getElementById("input").addEventListener("input", function(){ setFlag(false); });
   document.getElementById("sampleClean").addEventListener("click", function(){
@@ -211,12 +218,12 @@
   function bandClass(b){ return b.replace(/[^a-z]/gi,""); }
 
   document.getElementById("runBtn").addEventListener("click", function(){
-    if(!engine){ showErr("Engine still loading — try again in a moment."); return; }
+    if(!engine){ showErr(T("err.loading", "Engine still loading \u2014 try again in a moment.")); return; }
     var raw = document.getElementById("input").value;
     var text = raw, parsed = null;
     try { parsed = JSON.parse(raw); } catch(e){}
     if(parsed && typeof parsed === "object" && typeof parsed.text === "string") text = parsed.text;
-    if(!text.trim()){ showErr("Paste some text first — or load a SAMPLE demo."); return; }
+    if(!text.trim()){ showErr(T("err.empty", "Paste some text first \u2014 or load a SAMPLE demo.")); return; }
     document.getElementById("err").style.display = "none";
     var by = (document.getElementById("byField").value || "cwi-web").trim() || "cwi-web";
     var rep = engine.buildReport(text, by);
@@ -230,16 +237,16 @@
     var bandEl = document.getElementById("band");
     bandEl.textContent = rep.band;
     bandEl.className = "band " + bandClass(rep.band);
-    document.getElementById("bandMean").textContent = BAND_MEAN[rep.band] || "";
+    document.getElementById("bandMean").textContent = bandMean()[rep.band] || "";
     document.getElementById("repMeta").innerHTML =
-      "format <b>playback-report/v1</b><br>checked " + esc(rep.checked_at) +
-      " by <b>" + esc(rep.checked_by) + "</b><br>sha256 <code style='font-size:11px'>" +
+      esc(T("rep.format","format")) + " <b>playback-report/v1</b><br>" + esc(T("rep.checked","checked")) + " " + esc(rep.checked_at) +
+      " " + esc(T("rep.by","by")) + " <b>" + esc(rep.checked_by) + "</b><br>sha256 <code style='font-size:11px'>" +
       esc(rep.input_sha256.slice(0,16)) + "…</code>";
 
-    var T = rep.totals;
+    var TT = rep.totals;
     var cells = [
-      [T.total_claims,"claims"],[T.verified,"verified"],[T.deviations,"deviations"],
-      [T.unverifiable,"unverifiable"],[T.claim_flags,"claim-flags"],[T.denied,"denied"]
+      [TT.total_claims,T("tot.claims","claims")],[TT.verified,T("tot.verified","verified")],[TT.deviations,T("tot.deviations","deviations")],
+      [TT.unverifiable,T("tot.unverifiable","unverifiable")],[TT.claim_flags,T("tot.claim_flags","claim-flags")],[TT.denied,T("tot.denied","denied")]
     ];
     document.getElementById("totals").innerHTML = cells.map(function(c){
       return '<div class="tot"><div class="n">'+c[0]+'</div><div class="l">'+c[1]+'</div></div>';
@@ -257,7 +264,7 @@
         return '<div class="claim"><span class="pill '+esc(c.verdict)+'">'+esc(c.verdict)+
           '</span> <b>'+esc(c.type)+'</b> · “'+esc(c.value)+'”<br>'+esc(c.note)+
           (meta.length ? '<div class="meta">'+meta.join(" · ")+"</div>" : "")+'</div>';
-      }).join("") : '<div class="claim" style="color:var(--mut)">No claims detected in this sentence.</div>';
+      }).join("") : '<div class="claim" style="color:var(--mut)">' + esc(T("sent.no_claims", "No claims detected in this sentence.")) + '</div>';
       return '<div class="sent"><div class="shead"><span class="snum">#'+s.index+
         '</span><span class="pill '+esc(s.sentence_verdict)+'">'+esc(s.sentence_verdict)+
         '</span><span class="stext">'+esc(s.text)+'</span></div><div class="claims">'+claims+'</div></div>';
@@ -265,9 +272,9 @@
 
     var fs = rep.fact_set;
     document.getElementById("factset").innerHTML =
-      '<span class="badge live" style="font-size:10px">LIVE</span> Checked against <b>'+esc(fs.chip)+
+      '<span class="badge live" style="font-size:10px">LIVE</span> '+esc(T("factset.checked_against","Checked against"))+' <b>'+esc(fs.chip)+
       '</b> v'+esc(fs.chip_version)+' · observed '+esc(fs.observed)+
-      ' · <a href="'+esc(fs.citation)+'" target="_blank" rel="noopener">fact-set source</a>';
+      ' · <a href="'+esc(fs.citation)+'" target="_blank" rel="noopener">'+esc(T("factset.source","fact-set source"))+'</a>';
 
     document.getElementById("dlBtn").style.display = "";
     document.getElementById("results").scrollIntoView({behavior:"smooth"});
@@ -283,5 +290,6 @@
   });
 })();
 </script>
+<script src="https://cumulativewebinc.github.io/cwi-i18n/i18n.js" data-app="playback-chip"></script>
 </body>
 </html>
