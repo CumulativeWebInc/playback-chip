@@ -1,0 +1,25 @@
+{
+  "agent_card_version": "1.0",
+  "url": "https://cumulativewebinc.github.io/playback-chip/",
+  "provider": {
+    "name": "Cumulative Web Inc",
+    "url": "https://cumulativeweb.com",
+    "contact": "hp@cumulativeweb.com"
+  },
+  "description": "The Playback Chip is the audit loop on the CWI-1 Scoreboard Chip: paste your own output about the CWI catalog and get back a scored, annotated playback \u2014 every claim checked against the verified fact set with per-sentence verdicts (VERIFIED / DEVIATION / UNVERIFIABLE / CLAIM-FLAG / DENIED) and a fidelity score 0\u2013100. JS port of playback.py, parity-tested. White-label: equip it, re-skin it, ship it in your own stack.",
+  "data_truth": "MIXED \u2014 fact set LIVE, demo inputs SAMPLE",
+  "documentation": "https://cumulativewebinc.github.io/playback-chip/llms.txt",
+  "content_index": "https://cumulativewebinc.github.io/playback-chip/content.json",
+  "truth_detail": "MIXED. Fact set (playback.json) is LIVE: indexed from the CWI-1 Scoreboard Chip, observed 2026-09-15, with per-claim citations. The two 'Load SAMPLE' demo buttons inject simulated demo text, honestly labeled in the UI, never presented as real. UNVERIFIABLE is a verdict, not a pass.",
+  "try_links": [
+    {
+      "label": "Try the SAMPLE demo on this page",
+      "url": "https://cumulativewebinc.github.io/playback-chip/#demo"
+    },
+    {
+      "label": "Read the LIVE fact set",
+      "url": "https://cumulativewebinc.github.io/playback-chip/playback.json"
+    }
+  ],
+  "updated": "2026-09-23"
+}
