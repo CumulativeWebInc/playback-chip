@@ -1,0 +1,50 @@
+{
+  "schema": "cwi.content-index/1.0",
+  "name": "Playback Chip",
+  "url": "https://cumulativewebinc.github.io/playback-chip/",
+  "provider": "Cumulative Web Inc",
+  "data_truth": "MIXED \u2014 fact set LIVE, demo inputs SAMPLE",
+  "truth_detail": "MIXED. Fact set (playback.json) is LIVE: indexed from the CWI-1 Scoreboard Chip, observed 2026-09-15, with per-claim citations. The two 'Load SAMPLE' demo buttons inject simulated demo text, honestly labeled in the UI, never presented as real. UNVERIFIABLE is a verdict, not a pass.",
+  "positioning": "The audit loop on the CWI-1 Scoreboard Chip \u2014 paste your output about the CWI catalog, get back a scored, annotated playback against the verified fact set. Fact set LIVE; demo inputs honestly SAMPLE.",
+  "description": "The Playback Chip is the audit loop on the CWI-1 Scoreboard Chip: paste your own output about the CWI catalog and get back a scored, annotated playback \u2014 every claim checked against the verified fact set with per-sentence verdicts (VERIFIED / DEVIATION / UNVERIFIABLE / CLAIM-FLAG / DENIED) and a fidelity score 0\u2013100. JS port of playback.py, parity-tested. White-label: equip it, re-skin it, ship it in your own stack.",
+  "tags": [
+    "fact checking",
+    "claim verification",
+    "fidelity scoring",
+    "ai agents",
+    "cumulative web inc",
+    "data department"
+  ],
+  "cta": {
+    "text": "Try it now: load the SAMPLE demo on this page and watch the chip score it \u2014 or read the LIVE fact set it checks against.",
+    "links": [
+      {
+        "label": "Try the SAMPLE demo on this page",
+        "url": "https://cumulativewebinc.github.io/playback-chip/#demo"
+      },
+      {
+        "label": "Read the LIVE fact set",
+        "url": "https://cumulativewebinc.github.io/playback-chip/playback.json"
+      }
+    ]
+  },
+  "machine": [
+    {
+      "label": "playback.json \u2014 LIVE fact set",
+      "url": "https://cumulativewebinc.github.io/playback-chip/playback.json"
+    },
+    {
+      "label": "playback-schema.json \u2014 report schema",
+      "url": "https://cumulativewebinc.github.io/playback-chip/playback-schema.json"
+    },
+    {
+      "label": "playback.js \u2014 JS engine",
+      "url": "https://cumulativewebinc.github.io/playback-chip/playback.js"
+    }
+  ],
+  "attribution": {
+    "brand": "Cumulative Web Inc",
+    "contact": "hp@cumulativeweb.com"
+  },
+  "updated": "2026-09-23"
+}

@@ -84,6 +84,44 @@
   .err{background:#3a1010;border:1px solid var(--bad);color:#ffd7d7;border-radius:12px;padding:12px 16px;margin-top:12px;display:none}
   @media (max-width:640px){ h1{font-size:24px} .score{font-size:48px} }
 </style>
+<!-- CWI OS retrofit: SEO + social + machine metadata (2026-09-23) -->
+<meta name="description" content="The audit loop on the CWI-1 Scoreboard Chip — paste your output about the CWI catalog, get back a scored, annotated playback against the verified fact set. Fact set LIVE; demo inputs honestly SAMPLE.">
+<meta name="author" content="Cumulative Web Inc">
+<meta name="keywords" content="fact checking, claim verification, fidelity scoring, ai agents, cumulative web inc, data department">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Cumulative Web Inc">
+<meta property="og:title" content="Playback Chip — Cumulative Web Inc">
+<meta property="og:description" content="The audit loop on the CWI-1 Scoreboard Chip — paste your output about the CWI catalog, get back a scored, annotated playback against the verified fact set. Fact set LIVE; demo inputs honestly SAMPLE.">
+<meta property="og:url" content="https://cumulativewebinc.github.io/playback-chip/">
+<meta property="og:image" content="https://cumulativewebinc.github.io/playback-chip/assets/logo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Playback Chip — Cumulative Web Inc">
+<meta name="twitter:description" content="The audit loop on the CWI-1 Scoreboard Chip — paste your output about the CWI catalog, get back a scored, annotated playback against the verified fact set. Fact set LIVE; demo inputs honestly SAMPLE.">
+<meta name="twitter:image" content="https://cumulativewebinc.github.io/playback-chip/assets/logo.jpg">
+<link rel="canonical" href="https://cumulativewebinc.github.io/playback-chip/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Playback Chip",
+  "url": "https://cumulativewebinc.github.io/playback-chip/",
+  "description": "The Playback Chip is the audit loop on the CWI-1 Scoreboard Chip: paste your own output about the CWI catalog and get back a scored, annotated playback \u2014 every claim checked against the verified fact set with per-sentence verdicts (VERIFIED / DEVIATION / UNVERIFIABLE / CLAIM-FLAG / DENIED) and a fidelity score 0\u2013100. JS port of playback.py, parity-tested. White-label: equip it, re-skin it, ship it in your own stack.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Cumulative Web Inc",
+    "url": "https://cumulativeweb.com",
+    "logo": "https://cumulativewebinc.github.io/playback-chip/assets/logo.jpg"
+  },
+  "isAccessibleForFree": true
+}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -101,6 +139,13 @@
       </div>
     </div>
   </header>
+  <div class="cta-band" id="demo" style="border:1px solid var(--acc);border-radius:18px;padding:22px;margin:26px 0 8px;background:#0e1424;scroll-margin-top:20px">
+    <h2 style="margin:0 0 8px">Try the chip now</h2>
+    <p class="sub" style="margin:0 0 14px">Load the <b>SAMPLE</b> demo below and watch the chip score it — every claim annotated against the <b>LIVE</b> fact set.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a href="playback.json" style="background:var(--acc);color:#06283a;font-weight:800;padding:12px 22px;border-radius:10px;text-decoration:none">Read the LIVE fact set →</a>
+      <a href="https://github.com/CumulativeWebInc/playback-chip" style="border:1px solid var(--line);padding:12px 22px;border-radius:10px;text-decoration:none">Equip it in your stack →</a>
+    </div>
 
   <div class="how">
     <div class="step"><b data-i18n="step.feed.t">1 · Feed</b><span data-i18n="step.feed.x1">Paste text (or JSON with a</span> <code>text</code> <span data-i18n="step.feed.x2">field) — anything you were about to publish about the catalog.</span></div>
@@ -145,6 +190,7 @@
     <div class="factset" id="factset"></div>
   </div>
 
+  </div>
   <footer>
     <p class="rule" data-i18n="foot.rule">Honesty rule: UNVERIFIABLE is a verdict, not a pass. The chip certifies only what it checked against the fact set — silence about an unchecked claim is the protocol working, not a gap.</p>
     <p><span data-i18n="foot.factset">Fact set:</span> <span class="badge live" style="font-size:10px">LIVE</span> <span data-i18n="foot.factset_mid">indexed from the CWI-1 Scoreboard Chip, observed 2026-09-15 · Demo inputs are</span> <span class="badge sample" style="font-size:10px">SAMPLE</span> <span data-i18n="foot.factset_end">simulated data, never presented as real.</span><br>

@@ -4,7 +4,7 @@ const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const DIR = __dirname;
+const DIR = path.join(__dirname, ".."); /* repo root: playback.js/json/py live here */
 const CONFIG = JSON.parse(fs.readFileSync(path.join(DIR, "playback.json"), "utf8"));
 const { makeEngine, sha256 } = require(path.join(DIR, "playback.js"));
 const engine = makeEngine(CONFIG);
@@ -37,7 +37,7 @@ function pyReport(text) {
   const tmp = path.join(DIR, ".parity-in.txt");
   fs.writeFileSync(tmp, text, "utf8");
   const PY = process.env.PLAYBACK_PY ||
-    "/home/hatch/workspace/cwi-company/gear-line/playback/playback.py";
+    path.join(DIR, "playback.py"); /* repo copy: byte-identical to the gear-line original */
   execFileSync("python3", [PY, "--text-file", tmp, "--out", "/tmp/parity-out.json", "--by", "parity-test"]);
   const rep = JSON.parse(fs.readFileSync("/tmp/parity-out.json", "utf8"));
   fs.unlinkSync(tmp);

@@ -1,0 +1,33 @@
+# Playback Chip
+
+> The audit loop on the CWI-1 Scoreboard Chip — paste your output about the CWI catalog, get back a scored, annotated playback against the verified fact set. Fact set LIVE; demo inputs honestly SAMPLE.
+
+- Data truth: MIXED — fact set LIVE, demo inputs SAMPLE
+- Live site: https://cumulativewebinc.github.io/playback-chip/
+- Repo: https://github.com/CumulativeWebInc/playback-chip
+- By: Cumulative Web Inc (https://cumulativeweb.com)
+
+## What this is
+
+The Playback Chip is the audit loop on the CWI-1 Scoreboard Chip: paste your own output about the CWI catalog and get back a scored, annotated playback — every claim checked against the verified fact set with per-sentence verdicts (VERIFIED / DEVIATION / UNVERIFIABLE / CLAIM-FLAG / DENIED) and a fidelity score 0–100. JS port of playback.py, parity-tested. White-label: equip it, re-skin it, ship it in your own stack.
+
+## Truth labeling
+
+MIXED. Fact set (playback.json) is LIVE: indexed from the CWI-1 Scoreboard Chip, observed 2026-09-15, with per-claim citations. The two 'Load SAMPLE' demo buttons inject simulated demo text, honestly labeled in the UI, never presented as real. UNVERIFIABLE is a verdict, not a pass.
+
+## Machine-readable endpoints
+
+- llms.txt: https://cumulativewebinc.github.io/playback-chip/llms.txt
+- Agent card: https://cumulativewebinc.github.io/playback-chip/.well-known/agent-card.json
+- content.json: https://cumulativewebinc.github.io/playback-chip/content.json
+- playback.json — LIVE fact set: https://cumulativewebinc.github.io/playback-chip/playback.json
+- playback-schema.json — report schema: https://cumulativewebinc.github.io/playback-chip/playback-schema.json
+- playback.js — JS engine: https://cumulativewebinc.github.io/playback-chip/playback.js
+
+## Call to action
+
+Try it now: load the SAMPLE demo on this page and watch the chip score it — or read the LIVE fact set it checks against.
+
+## Contact
+
+Business & licensing: hp@cumulativeweb.com (official public contact, Cumulative Web Inc)
