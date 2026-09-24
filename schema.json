@@ -12,5 +12,6 @@
   },
   "description": "JavaScript port of playback.py with 21/21 parity tests; fact set live since 2026-09-15.",
   "datePublished": "2026-09-15",
-  "disclaimer": "Demo data: demo buttons are SAMPLE-labeled."
+  "disclaimer": "Demo data: demo buttons are SAMPLE-labeled.",
+  "schema_version": "1.0.0"
 }
